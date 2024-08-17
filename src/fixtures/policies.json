@@ -1,0 +1,27 @@
+{
+  "abcd-client": [
+    {
+      "sealId": "107647",
+      "policies": [
+        {
+          "name": "comment-for-code-block",
+          "executionDateTime": "2024-07-01 09:45:00",
+          "status": "SUCCESS",
+          "executionTime": "0.02s"
+        },
+        {
+          "name": "use-of-unused-imports",
+          "executionDateTime": "2024-07-01 09:45:00",
+          "status": "IN-PROGRESS",
+          "executionTime": "0.05s"
+        },
+        {
+          "name": "use-of-unused-imports",
+          "executionDateTime": "2024-07-01 09:45:00",
+          "status": "FAILED",
+          "executionTime": "0.05s"
+        }
+      ]
+    }
+  ]
+}
