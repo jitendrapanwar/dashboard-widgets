@@ -1,18 +1,15 @@
 import './App.css';
-// import PolicyCard from './components/PolicyCard'
-import BasicTable from './components/BasicTable';
+//import PolicyCard from './components/PolicyCard'
+//import BasicTable from './components/BasicTable';
 import { Box } from '@mui/material';
-//import WidgetGridLayout from './components/WidgetGridLayout';
-
+import WidgetGridLayout from './components/WidgetGridLayout';
+//import ButtonGroupAnim from './components/ButtonGroupAnim'
 function App() {
 
 
   return (
     <div className="App">
-      <BasicTable />
-      <Box sx={{ mt: 2, mb: 2 }}></Box>
-      {/* <PolicyCard /> */}
-      {/* <WidgetGridLayout /> */}
+      <WidgetGridLayout />
     </div>
   );
 }
