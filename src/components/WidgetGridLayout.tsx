@@ -11,10 +11,10 @@ export default function WidgetGridLayout() {
   const [layouts, setLayouts] = useRecoilState(layoutAtoms);
 
   const layoutConfig = widgets.map(widget => widget.layout)
-  console.log(layouts)
+
   const gridItems = useMemo(() => widgets.map((widget) => (
     <div key={widget.layout.i} style={{ backgroundColor: 'gray' }}>
-      <WidgetCard title={widget.widgetTitle} layoutProps={widget.layout} id={widget.widgetId} />
+      <WidgetCard widget={widget} />
     </div>
   )), [widgets]);
 

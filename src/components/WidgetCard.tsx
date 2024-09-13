@@ -10,18 +10,16 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { LayoutPropsType } from '../types';
+import { LayoutPropsType, WidgetType } from '../types';
 import { Avatar, CardHeader, IconButton } from '@mui/material';
 import { useRecoilState } from 'recoil';
-import { widgetAtoms, widgetAtomFamily } from '../atoms';
+import { widgetAtoms } from '../atoms';
 
 type CardProps = {
-  title: string;
-  layoutProps: LayoutPropsType
-  id: string
+  widget: WidgetType
 }
-export default function WidgetCard({ title, layoutProps, id }: CardProps) {
-  const [selectedWidget, setSelectedWidget] = useRecoilState(widgetAtomFamily(id));
+export default function WidgetCard({ widget: selectedWidget }: CardProps) {
+  //const [selectedWidget, setSelectedWidget] = useRecoilState(widgetAtomFamily(widget.widgetId));
   const [widgets, setWidgets] = useRecoilState(widgetAtoms)
   const [minimize, setMinimize] = useState(false)
 
@@ -33,17 +31,17 @@ export default function WidgetCard({ title, layoutProps, id }: CardProps) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  console.log(selectedWidget)
+
   const handleMenuItemClick = (key: string) => {
 
     const neww = widgets.map(widget => {
-      if (widget.widgetId === selectedWidget.i) {
+      if (widget.widgetId === selectedWidget.widgetId) {
         return {
           ...widget, layout: {
             ...widget.layout,
-            static: key === 'isStatic' ? !selectedWidget.static : selectedWidget.static,
-            isResizable: key === 'isResizable' ? !selectedWidget.isResizable : selectedWidget.isResizable,
-            isDraggable: key === 'isDraggable' ? !selectedWidget.isDraggable : selectedWidget.isDraggable
+            static: key === 'isStatic' ? !selectedWidget.layout.static : selectedWidget.layout.static,
+            isResizable: key === 'isResizable' ? !selectedWidget.layout.isResizable : selectedWidget.layout.isResizable,
+            isDraggable: key === 'isDraggable' ? !selectedWidget.layout.isDraggable : selectedWidget.layout.isDraggable
           }
         }
       } else {
@@ -51,12 +49,15 @@ export default function WidgetCard({ title, layoutProps, id }: CardProps) {
       }
     })
 
-    setSelectedWidget({
-      ...selectedWidget,
-      static: !selectedWidget.static,
-      isResizable: !selectedWidget.isResizable,
-      isDraggable: !selectedWidget.isDraggable
-    })
+    // setSelectedWidget({
+    //   ...selectedWidget,
+    //   layout: {
+    //     ...selectedWidget.layout, 
+    //     static: key === 'isStatic' ? !selectedWidget.layout.static : selectedWidget.layout.static,
+    //   isResizable: key === 'isResizable' ? !selectedWidget.layout.isResizable : selectedWidget.layout.isResizable,
+    //   isDraggable: key === 'isDraggable' ? !selectedWidget.layout.isDraggable : selectedWidget.layout.isDraggable
+    //   }     
+    // })
 
     setWidgets(neww);
 
@@ -65,7 +66,7 @@ export default function WidgetCard({ title, layoutProps, id }: CardProps) {
 
   return (
     <>
-      <Card sx={{ animation: `${minimize ? 'mymove1' : 'mymove'} 500ms ease-in both` }} >
+      <Card>
         <CardContent>
           <CardHeader
             avatar={
@@ -83,7 +84,7 @@ export default function WidgetCard({ title, layoutProps, id }: CardProps) {
                 </IconButton>
               </>
             }
-            title={title}
+            title={selectedWidget?.widgetTitle}
             subheader="September 14, 2016"
           />
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
@@ -112,19 +113,19 @@ export default function WidgetCard({ title, layoutProps, id }: CardProps) {
       >
         <MenuItem onClick={() => handleMenuItemClick('isStatic')}>
           <ListItemIcon >
-            {layoutProps.static ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon />}
+            {selectedWidget.layout.static ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon />}
           </ListItemIcon>
           Static
         </MenuItem>
         <MenuItem onClick={() => handleMenuItemClick('isResizable')}>
           <ListItemIcon >
-            {layoutProps.isResizable ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon />}
+            {selectedWidget.layout.isResizable ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon />}
           </ListItemIcon>
           Resizable
         </MenuItem>
         <MenuItem onClick={() => handleMenuItemClick('isDraggable')}>
           <ListItemIcon >
-            {layoutProps.isDraggable ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon />}
+            {selectedWidget.layout.isDraggable ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon />}
           </ListItemIcon>
           Draggable
         </MenuItem>
