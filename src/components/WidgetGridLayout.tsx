@@ -4,36 +4,27 @@ import React, { useMemo } from 'react';
 import GridLayout from 'react-grid-layout';
 import '../Gridstyles.css'
 import { useRecoilState } from 'recoil';
-import { widgetAtoms, layoutAtoms } from '../atoms';
+import { layoutAtoms } from '../atoms';
 
 export default function WidgetGridLayout() {
-  const [widgets, setWidgets] = useRecoilState(widgetAtoms);
   const [layouts, setLayouts] = useRecoilState(layoutAtoms);
 
-  const layoutConfig = widgets.map(widget => widget.layout)
+  //const layoutConfig = widgets.map(widget => widget.layout)
 
-  const gridItems = useMemo(() => widgets.map((widget) => (
-    <div key={widget.layout.i} style={{ backgroundColor: 'gray' }}>
-      <WidgetCard widget={widget} />
+  const gridItems = useMemo(() => layouts.map((layout) => (
+    <div key={layout.i} style={{ backgroundColor: 'gray' }}>
+      <WidgetCard widgetId={layout.i} />
     </div>
-  )), [widgets]);
+  )), [layouts]);
 
   const onLayoutChange = (newLayout: any) => {
     setLayouts(newLayout)
-    const neww = widgets?.map((widget, index) => {
-      if (widget.widgetId === newLayout[index]?.i) {
-        return { ...widget, layout: newLayout[index] }
-      } else {
-        return widget;
-      }
-    })
-    setWidgets(neww);
   }
 
   return (
     <div className="App">
       <GridLayout className="optimized-grid"
-        layout={layoutConfig}
+        layout={layouts}
         cols={12}
         rowHeight={30}
         autoSize={true}

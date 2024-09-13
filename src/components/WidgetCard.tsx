@@ -13,14 +13,15 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { LayoutPropsType, WidgetType } from '../types';
 import { Avatar, CardHeader, IconButton } from '@mui/material';
 import { useRecoilState } from 'recoil';
-import { widgetAtoms } from '../atoms';
+import { widgetLayoutSelectorFamily, widgetSelectorFamily } from '../atoms';
 
 type CardProps = {
-  widget: WidgetType
+  widgetId: string
 }
-export default function WidgetCard({ widget: selectedWidget }: CardProps) {
-  //const [selectedWidget, setSelectedWidget] = useRecoilState(widgetAtomFamily(widget.widgetId));
-  const [widgets, setWidgets] = useRecoilState(widgetAtoms)
+export default function WidgetCard({ widgetId }: CardProps) {
+  const [selectedWidget, setSelectedWidget] = useRecoilState(widgetLayoutSelectorFamily(widgetId));
+  const [currentWidget, setCurrentWidget] = useRecoilState(widgetSelectorFamily(widgetId));
+
   const [minimize, setMinimize] = useState(false)
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -34,35 +35,13 @@ export default function WidgetCard({ widget: selectedWidget }: CardProps) {
 
   const handleMenuItemClick = (key: string) => {
 
-    const neww = widgets.map(widget => {
-      if (widget.widgetId === selectedWidget.widgetId) {
-        return {
-          ...widget, layout: {
-            ...widget.layout,
-            static: key === 'isStatic' ? !selectedWidget.layout.static : selectedWidget.layout.static,
-            isResizable: key === 'isResizable' ? !selectedWidget.layout.isResizable : selectedWidget.layout.isResizable,
-            isDraggable: key === 'isDraggable' ? !selectedWidget.layout.isDraggable : selectedWidget.layout.isDraggable
-          }
-        }
-      } else {
-        return widget;
-      }
-    })
-
-    // setSelectedWidget({
-    //   ...selectedWidget,
-    //   layout: {
-    //     ...selectedWidget.layout, 
-    //     static: key === 'isStatic' ? !selectedWidget.layout.static : selectedWidget.layout.static,
-    //   isResizable: key === 'isResizable' ? !selectedWidget.layout.isResizable : selectedWidget.layout.isResizable,
-    //   isDraggable: key === 'isDraggable' ? !selectedWidget.layout.isDraggable : selectedWidget.layout.isDraggable
-    //   }     
-    // })
-
-    setWidgets(neww);
-
+    setSelectedWidget((prevState: any) => ({
+      ...prevState,
+      static: key === 'isStatic' ? !prevState?.static : prevState?.static,
+      isResizable: key === 'isResizable' ? !prevState?.isResizable : prevState?.isResizable,
+      isDraggable: key === 'isDraggable' ? !prevState?.isDraggable : prevState?.isDraggable
+    }));
   }
-
 
   return (
     <>
@@ -84,7 +63,7 @@ export default function WidgetCard({ widget: selectedWidget }: CardProps) {
                 </IconButton>
               </>
             }
-            title={selectedWidget?.widgetTitle}
+            title={currentWidget?.widgetTitle}
             subheader="September 14, 2016"
           />
           <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
@@ -113,19 +92,19 @@ export default function WidgetCard({ widget: selectedWidget }: CardProps) {
       >
         <MenuItem onClick={() => handleMenuItemClick('isStatic')}>
           <ListItemIcon >
-            {selectedWidget.layout.static ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon />}
+            {selectedWidget?.static ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon />}
           </ListItemIcon>
           Static
         </MenuItem>
         <MenuItem onClick={() => handleMenuItemClick('isResizable')}>
           <ListItemIcon >
-            {selectedWidget.layout.isResizable ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon />}
+            {selectedWidget?.isResizable ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon />}
           </ListItemIcon>
           Resizable
         </MenuItem>
         <MenuItem onClick={() => handleMenuItemClick('isDraggable')}>
           <ListItemIcon >
-            {selectedWidget.layout.isDraggable ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon />}
+            {selectedWidget?.isDraggable ? <CheckBoxIcon color='primary' /> : <CheckBoxOutlineBlankIcon />}
           </ListItemIcon>
           Draggable
         </MenuItem>
