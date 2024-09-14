@@ -25,12 +25,13 @@ export default function WidgetGridLayout() {
     <div className="App">
       <GridLayout className="optimized-grid"
         layout={layouts}
-        cols={12}
-        rowHeight={30}
+        cols={3}
+        rowHeight={200}
         autoSize={true}
         width={1200}
         onLayoutChange={onLayoutChange}
         draggableCancel='.no-drag'
+        compactType='horizontal'
       >
         {gridItems}
       </GridLayout>

@@ -1,4 +1,4 @@
-import { atom, selectorFamily } from "recoil";
+import { DefaultValue, atom, selectorFamily } from "recoil";
 
 let widgets = [
   {
@@ -16,6 +16,16 @@ let widgets = [
     widgetTitle: "Widget 3",
     widgetInUse: true,
   },
+  {
+    widgetId: "w4",
+    widgetTitle: "Widget 4",
+    widgetInUse: true,
+  },
+  {
+    widgetId: "w5",
+    widgetTitle: "Widget 5",
+    widgetInUse: true,
+  },
 ];
 
 let layoutConfig = [
@@ -23,8 +33,8 @@ let layoutConfig = [
     i: "w1",
     x: 0,
     y: 0,
-    w: 2,
-    h: 10,
+    w: 1,
+    h: 1,
     isResizable: true,
     isDraggable: true,
     static: false,
@@ -32,10 +42,10 @@ let layoutConfig = [
   },
   {
     i: "w2",
-    x: 2,
+    x: 1,
     y: 0,
-    w: 4,
-    h: 10,
+    w: 1,
+    h: 2,
     isResizable: true,
     isDraggable: true,
     static: false,
@@ -43,10 +53,32 @@ let layoutConfig = [
   },
   {
     i: "w3",
-    x: 6,
+    x: 2,
     y: 0,
+    w: 1,
+    h: 1,
+    isResizable: true,
+    isDraggable: true,
+    static: false,
+    isBounded: true,
+  },
+  {
+    i: "w4",
+    x: 0,
+    y: 1,
     w: 2,
-    h: 10,
+    h: 1,
+    isResizable: true,
+    isDraggable: true,
+    static: false,
+    isBounded: true,
+  },
+  {
+    i: "w5",
+    x: 1,
+    y: 1,
+    w: 1,
+    h: 1,
     isResizable: true,
     isDraggable: true,
     static: false,
@@ -61,7 +93,11 @@ export const widgetAtoms = atom({
 
 export const layoutAtoms = atom({
   key: "layoutAtoms", // unique ID (with respect to other atoms/selectors)
-  default: layoutConfig,
+  default: layoutConfig.filter((el) => {
+    return widgets.some((f) => {
+      return f.widgetId === el.i && f.widgetInUse === true;
+    });
+  }),
 });
 
 export const widgetSelectorFamily = selectorFamily({
@@ -76,7 +112,7 @@ export const widgetSelectorFamily = selectorFamily({
   set:
     (widgetId) =>
     ({ set, get }, newValue) => {
-      console.log(newValue);
+      // console.log(newValue);
       const widgets = get(widgetAtoms);
 
       const updatedWidgets = widgets.map((widget) => {
@@ -86,6 +122,15 @@ export const widgetSelectorFamily = selectorFamily({
         return widget;
       });
       set(widgetAtoms, updatedWidgets);
+
+      // update layouts
+      let layouts = get(layoutAtoms);
+      if (!(newValue instanceof DefaultValue)) {
+        const updatedLayout = layouts.filter(
+          (layout) => layout.i !== newValue?.widgetId
+        );
+        set(layoutAtoms, updatedLayout);
+      }
     },
 });
 

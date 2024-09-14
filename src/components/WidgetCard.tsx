@@ -7,13 +7,12 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
-import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import { LayoutPropsType, WidgetType } from '../types';
-import { Avatar, CardHeader, IconButton } from '@mui/material';
+import { CardHeader, IconButton } from '@mui/material';
 import { useRecoilState } from 'recoil';
 import { widgetLayoutSelectorFamily, widgetSelectorFamily } from '../atoms';
+import TaskCompletion from '../widgets/TaskCompletion';
+import { Close } from '@mui/icons-material';
 
 type CardProps = {
   widgetId: string
@@ -21,8 +20,6 @@ type CardProps = {
 export default function WidgetCard({ widgetId }: CardProps) {
   const [selectedWidget, setSelectedWidget] = useRecoilState(widgetLayoutSelectorFamily(widgetId));
   const [currentWidget, setCurrentWidget] = useRecoilState(widgetSelectorFamily(widgetId));
-
-  const [minimize, setMinimize] = useState(false)
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -43,41 +40,32 @@ export default function WidgetCard({ widgetId }: CardProps) {
     }));
   }
 
+  const handleRemoveWidget = () => {
+
+    setCurrentWidget((prevState: any) => ({
+      ...prevState,
+      widgetInUse: false
+    }));
+  }
+
   return (
     <>
-      <Card>
+      <Card sx={{ height: '100%', borderRadius: '0' }} variant='outlined' >
         <CardContent>
           <CardHeader
-            avatar={
-              <Avatar sx={{ bgcolor: 'red' }} aria-label="recipe">
-                R
-              </Avatar>
-            }
             action={
               <>
-                <IconButton aria-label="settings" onClick={() => setMinimize(!minimize)} className='no-drag'>
-                  <UnfoldLessIcon />
-                </IconButton>
                 <IconButton aria-label="settings" onClick={handleClick} className='no-drag'>
                   <MoreVertIcon />
+                </IconButton>
+                <IconButton aria-label="close" onClick={handleRemoveWidget} className='no-drag'>
+                  <Close />
                 </IconButton>
               </>
             }
             title={currentWidget?.widgetTitle}
-            subheader="September 14, 2016"
           />
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            Word of the Day
-          </Typography>
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            Word of the Day
-          </Typography>
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            Word of the Day
-          </Typography>
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            Word of the Day
-          </Typography>
+          <TaskCompletion />
         </CardContent>
       </Card>
       <Menu
