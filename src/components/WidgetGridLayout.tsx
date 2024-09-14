@@ -9,8 +9,6 @@ import { layoutAtoms } from '../atoms';
 export default function WidgetGridLayout() {
   const [layouts, setLayouts] = useRecoilState(layoutAtoms);
 
-  //const layoutConfig = widgets.map(widget => widget.layout)
-
   const gridItems = useMemo(() => layouts.map((layout) => (
     <div key={layout.i} style={{ backgroundColor: 'gray' }}>
       <WidgetCard widgetId={layout.i} />

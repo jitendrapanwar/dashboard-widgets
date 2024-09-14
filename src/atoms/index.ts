@@ -93,9 +93,9 @@ export const widgetAtoms = atom({
 
 export const layoutAtoms = atom({
   key: "layoutAtoms", // unique ID (with respect to other atoms/selectors)
-  default: layoutConfig.filter((el) => {
-    return widgets.some((f) => {
-      return f.widgetId === el.i && f.widgetInUse === true;
+  default: layoutConfig.filter((layout) => {
+    return widgets.some((widget) => {
+      return widget.widgetId === layout.i && widget.widgetInUse === true;
     });
   }),
 });
@@ -112,7 +112,7 @@ export const widgetSelectorFamily = selectorFamily({
   set:
     (widgetId) =>
     ({ set, get }, newValue) => {
-      // console.log(newValue);
+      console.log(newValue);
       const widgets = get(widgetAtoms);
 
       const updatedWidgets = widgets.map((widget) => {
