@@ -9,7 +9,7 @@ let widgets = [
   {
     widgetId: "w2",
     widgetTitle: "Widget 2",
-    widgetInUse: true,
+    widgetInUse: false,
   },
   {
     widgetId: "w3",
@@ -87,17 +87,41 @@ let layoutConfig = [
 ];
 
 export const widgetAtoms = atom({
-  key: "widgets", // unique ID (with respect to other atoms/selectors)
+  key: "widgets",
   default: widgets,
 });
 
 export const layoutAtoms = atom({
-  key: "layoutAtoms", // unique ID (with respect to other atoms/selectors)
-  default: layoutConfig.filter((layout) => {
-    return widgets.some((widget) => {
-      return widget.widgetId === layout.i && widget.widgetInUse === true;
-    });
-  }),
+  key: "layoutAtoms",
+  default: layoutConfig,
+});
+
+export const layoutSelectorFamily = selectorFamily({
+  key: "layoutSelectorFamily",
+  get:
+    (widgets: any) =>
+    ({ get }) => {
+      console.log(widgets);
+      const layouts = get(layoutAtoms);
+      return layouts.filter((layout) => {
+        return widgets?.some((widget: any) => {
+          return widget.widgetId === layout.i;
+        });
+      });
+    },
+  set:
+    (widgets) =>
+    ({ set, get }, newValue) => {
+      console.log(newValue);
+      const layouts = get(layoutAtoms);
+      const updatedLayout = layouts.filter((layout) => {
+        return widgets?.some((widget: any) => {
+          return widget.widgetId === layout.i;
+        });
+      });
+      console.log(updatedLayout);
+      //set(layoutAtoms, updatedLayout);
+    },
 });
 
 export const widgetSelectorFamily = selectorFamily({
@@ -126,14 +150,17 @@ export const widgetSelectorFamily = selectorFamily({
       // update layouts
       let layouts = get(layoutAtoms);
       if (!(newValue instanceof DefaultValue)) {
-        const updatedLayout = layouts.filter(
-          (layout) => layout.i !== newValue?.widgetId
-        );
+        const updatedLayout = layouts.filter((layout) => {
+          return widgets?.some((widget: any) => {
+            return widget.widgetId === layout.i;
+          });
+        });
         set(layoutAtoms, updatedLayout);
       }
     },
 });
 
+//widgetCardOptions:  update resize, draggable and static props
 export const widgetLayoutSelectorFamily = selectorFamily({
   key: "widgetLayoutSelectorFamily",
   get:
@@ -153,6 +180,7 @@ export const widgetLayoutSelectorFamily = selectorFamily({
         }
         return layout;
       });
+      console.log("4: ", newValue);
       set(layoutAtoms, updatedLayout);
     },
 });
