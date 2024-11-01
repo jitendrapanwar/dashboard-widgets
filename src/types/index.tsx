@@ -7,12 +7,6 @@ export interface LayoutPropsType {
   isBounded?: boolean;
   isDraggable: boolean;
   isResizable: boolean;
-  maxH?: number;
-  maxW?: number;
-  minH?: number;
-  minW?: number;
-  moved?: boolean;
-  resizeHandles?: undefined;
   static: boolean;
 }
 

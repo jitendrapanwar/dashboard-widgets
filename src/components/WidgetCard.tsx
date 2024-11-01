@@ -7,25 +7,22 @@ import { widgetSelectorFamily } from '../atoms';
 import TaskCompletion from '../widgets/TaskCompletion';
 import { Add, Close } from '@mui/icons-material';
 import WidgetOptions from './WidgetOptions';
+import { useAtom } from 'jotai';
 
 type CardProps = {
   widgetId: string
 }
 export default function WidgetCard({ widgetId }: CardProps) {
-  const [currentWidget, setCurrentWidget] = useRecoilState(widgetSelectorFamily(widgetId));
+  const [currentWidget, setCurrentWidget] = useAtom(widgetSelectorFamily(widgetId));
 
   const handleRemoveWidget = () => {
-    setCurrentWidget((prevState: any) => ({
-      ...prevState,
-      widgetInUse: false
-    }));
+    setCurrentWidget({ ...currentWidget, widgetInUse: false });
+    //widgetSelectorFamily.remove({ widgetId })
   }
 
   const handleAddWidget = () => {
-    setCurrentWidget((prevState: any) => ({
-      ...prevState,
-      widgetInUse: true
-    }));
+    setCurrentWidget({ ...currentWidget, widgetInUse: true });
+
   }
 
   return (
